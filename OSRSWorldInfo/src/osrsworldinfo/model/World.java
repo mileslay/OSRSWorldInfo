@@ -1,4 +1,4 @@
-package osrspingchecker.model;
+package osrsworldinfo.model;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -6,34 +6,34 @@ import javafx.beans.property.SimpleStringProperty;
 public class World {
 	
 	private SimpleIntegerProperty number, playerCount, ping;
-	private SimpleStringProperty type, region, activity;
+	private SimpleStringProperty type, activity, location;
 	
-	public World(int number, int playerCount, String type, String region, String activity) {
+	public World(int number, String type, int playerCount, String activity, String location) {
 		this.number = new SimpleIntegerProperty(number);
-		this.playerCount = new SimpleIntegerProperty(playerCount);
 		this.type = new SimpleStringProperty(type);
-		this.region = new SimpleStringProperty(region);
+		this.playerCount = new SimpleIntegerProperty(playerCount);
 		this.activity = new SimpleStringProperty(activity);
+		this.location = new SimpleStringProperty(location);
 	}
 	
 	public Integer getNumber() {
 		return number.get();
 	}
 	
-	public Integer getPlayerCount() {
-		return playerCount.get();
-	}
-	
 	public String getType() {
 		return type.get();
 	}
 	
-	public String getRegion() {
-		return region.get();
+	public Integer getPlayerCount() {
+		return playerCount.get();
 	}
 	
 	public String getActivity() {
 		return activity.get();
+	}
+	
+	public String getLocation() {
+		return location.get();
 	}
 	
 	public Integer getPing() {

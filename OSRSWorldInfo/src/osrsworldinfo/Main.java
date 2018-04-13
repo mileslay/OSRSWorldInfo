@@ -1,4 +1,4 @@
-package osrspingchecker;
+package osrsworldinfo;
 	
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

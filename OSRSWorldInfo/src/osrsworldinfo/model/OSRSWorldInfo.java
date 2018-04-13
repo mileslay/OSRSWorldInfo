@@ -1,4 +1,4 @@
-package osrspingchecker.model;
+package osrsworldinfo.model;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,14 +28,19 @@ public class OSRSWorldInfo {
 	private final int PING_COUNT = 1;
 	private final int THREAD_COUNT = 4;
 	private final Pattern PING_AVG_PATTERN = Pattern.compile("Average = (\\d+)ms");
+	private final int PING_TIMEOUT = 5;	//ping timeout in seconds
 
 	public OSRSWorldInfo() {
-		worlds = scrapeWorldData();
-		pingAll();
+		this.worlds = scrapeWorldData();
+	}
+	
+	public OSRSWorldInfo(boolean ping) {
+		this.worlds = scrapeWorldData();
+		if(ping) pingAll();
 	}
 	
 	public ArrayList<World> scrapeWorldData() {
-		ArrayList<World> worlds = new ArrayList<World>();
+		ArrayList<World> worldData = new ArrayList<World>();
 		
 		try {
 			worldListPage = Jsoup.connect(worldListURL).get();
@@ -58,20 +63,20 @@ public class OSRSWorldInfo {
 			if (playerNumIndex != -1)
 				playerCount = Integer.parseInt(PLAYER_COUNT_TEXT.substring(0, playerNumIndex - 1));
 
-			String region = columns.get(2).text();
+			String location = columns.get(2).text();
 			String type = columns.get(3).text();
 			String activity = columns.get(4).text();
 			
 			if(activity.equals("-"))
 				activity = "";
 			
-			worlds.add(new World(worldNumber, playerCount, region, type, activity));
+			worldData.add(new World(worldNumber, type, playerCount, activity, location));
 		}
 		
-		return worlds;
+		return worldData;
 	}
 
-	public int ping(String ip) {
+	private int ping(String ip) {
 		Matcher matcher;
 		
 		try {
@@ -112,7 +117,7 @@ public class OSRSWorldInfo {
 			
 		for(World world: worlds) {
 			try {
-				world.setPing(pingMap.get(world).get(30, TimeUnit.SECONDS));
+				world.setPing(pingMap.get(world).get(PING_TIMEOUT, TimeUnit.SECONDS));
 				System.out.println("World " + world.getNumber() + " ping: " + world.getPing());
 			} catch (Exception e) {
 				world.setPing(-1);
@@ -128,7 +133,7 @@ public class OSRSWorldInfo {
 		pingAll();
 	}
 
-	public String getWorldIP(int worldNumber) {
+	private String getWorldIP(int worldNumber) {
 		return "oldschool" + worldNumber + ".runescape.com";
 	}
 	
